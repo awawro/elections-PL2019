@@ -12,7 +12,7 @@ The size of electoral districts (okręg wyborczy) for the Sejm varies between 60
 
 ### Results
 The analysis is divided into four sections:
-1) Voting metadata: void votes, etc.: [here](output/districts.md)
+1) Voting metadata: void votes, etc.: [here](R/districts.md)
 2) Candidates metadata
 3) Candidate results
 4) Political parties results
