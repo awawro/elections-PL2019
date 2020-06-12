@@ -1,0 +1,43 @@
+---
+title: "districts"
+author: "Adam Wawro"
+date: "6/11/2020"
+output: md_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r include=FALSE, echo=FALSE}
+library(tidyverse)
+library(ggridges)
+library(viridis)
+library(sf)
+```
+
+```{r cache=TRUE, include=FALSE, echo=FALSE}
+results_station_clean <- readRDS("output/clean/results_station_clean.rds")
+results_candidate_clean <- readRDS("output/clean/results_candidate_clean.rds")
+results_slate_clean <- readRDS("output/clean/results_slate_clean.rds")
+results_candidate_full <- readRDS("output/clean/results_candidate_full.rds")
+map_powiaty <- readRDS("output/clean/map_powiaty.rds")
+map_wojwodztwa <- readRDS("output/clean/map_wojewodztwa.rds")
+```
+
+## Wybory do Sejmu 2019: analiza metadanych z okręgów wyborczych
+
+Dane źródłowe pobrane ze strony PKW: <https://sejmsenat2019.pkw.gov.pl/sejmsenat2019/pl/dane_w_arkuszach>.
+
+Liczba niewykorzystanych kart do głosowania
+
+```{r echo=FALSE}
+results_station_clean %>%
+  filter(typ_obszaru %in% c("miasto", "wieś")) %>%
+  ggplot(aes(x=wojewodztwo, y=(niewykorzystane_karty/otrzymanych_kart), fill = typ_obszaru)) +
+    stat_boxplot(outlier.shape = NA) +
+    labs(y="% unused ballots", x="voivodeship") +
+    coord_flip()
+```
+ 
+ Ddd.
