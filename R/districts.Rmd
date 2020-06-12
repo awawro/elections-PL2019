@@ -17,12 +17,12 @@ library(sf)
 ```
 
 ```{r cache=TRUE, include=FALSE, echo=FALSE}
-results_station_clean <- readRDS("output/clean/results_station_clean.rds")
-results_candidate_clean <- readRDS("output/clean/results_candidate_clean.rds")
-results_slate_clean <- readRDS("output/clean/results_slate_clean.rds")
-results_candidate_full <- readRDS("output/clean/results_candidate_full.rds")
-map_powiaty <- readRDS("output/clean/map_powiaty.rds")
-map_wojwodztwa <- readRDS("output/clean/map_wojewodztwa.rds")
+results_station_clean <- readRDS("../output/clean/results_station_clean.rds")
+results_candidate_clean <- readRDS("../output/clean/results_candidate_clean.rds")
+results_slate_clean <- readRDS("../output/clean/results_slate_clean.rds")
+results_candidate_full <- readRDS("../output/clean/results_candidate_full.rds")
+map_powiaty <- readRDS("../output/clean/map_powiaty.rds")
+map_wojwodztwa <- readRDS("../output/clean/map_wojewodztwa.rds")
 ```
 
 ## Wybory do Sejmu 2019: analiza metadanych z okręgów wyborczych
