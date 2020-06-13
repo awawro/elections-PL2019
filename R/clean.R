@@ -10,6 +10,7 @@ results_list_raw <- lapply(results_files, read_delim, delim = ";")
 # Read map files into dfs
 map_powiaty <- st_read("input/maps/powiaty-medium.geojson")
 map_wojwodztwa <- st_read("input/maps/wojewodztwa-medium.geojson")
+map_powiaty$nazwa <- str_sub(map_powiaty$nazwa, 8)
 
 ### Clean and subset results dataset
 # prepare for rbind, stations meta only
