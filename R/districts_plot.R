@@ -21,7 +21,9 @@ map_wojewodztwa %>%
   left_join(turnover_woj, by = c("nazwa" = "wojewodztwo")) %>%
   ggplot() +
     geom_sf(aes(fill = turnover)) +
-    scale_fill_viridis(limits = c(45,80))
+    scale_fill_viridis(limits = c(40,80), option = "E") +
+    theme_void() +
+    theme(legend.position = "bottom", legend.direction = "horizontal")
 
 #turnover powiaty
 turnover_pow <- results_station_clean %>%
@@ -32,8 +34,11 @@ turnover_pow <- results_station_clean %>%
 map_powiaty %>%
   left_join(turnover_pow, by = c("nazwa" = "powiat")) %>%
   ggplot() +
-  geom_sf(aes(fill = turnover)) +
-  scale_fill_viridis(limits = c(45,80))
+    geom_sf(aes(fill = turnover)) +
+    geom_sf(data = map_wojewodztwa, size = 0.25, alpha = 0, color = "white") +
+    scale_fill_viridis(option = "E") +
+    theme_void() +
+    theme(legend.position = "bottom", legend.direction = "horizontal")
 
 
 ## tests
