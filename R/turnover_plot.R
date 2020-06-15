@@ -21,7 +21,7 @@ map_wojewodztwa %>%
   left_join(turnover_woj, by = c("nazwa" = "wojewodztwo")) %>%
   ggplot() +
     geom_sf(aes(fill = turnover), size = 0.1, color = "white") +
-    scale_fill_viridis(limits = c(46,78), breaks = c(50, 55, 60, 65, 70, 75), name = "voter turnover / %", option = "E") +
+    scale_fill_viridis(limits = c(46,78), breaks = c(50, 55, 60, 65, 70, 75), name = "turnover / %", option = "E") +
     theme_void() +
     theme(legend.position = "right")
 
@@ -35,10 +35,18 @@ map_powiaty %>%
   ggplot() +
     geom_sf(aes(fill = turnover)) +
     geom_sf(data = map_wojewodztwa, size = 0.1, fill = NA, color = "white") +
-    scale_fill_viridis(limits = c(46,78), breaks = c(50, 55, 60, 65, 70, 75), name = "voter turnover / %", option = "E") +
+    scale_fill_viridis(limits = c(46,78), breaks = c(50, 55, 60, 65, 70, 75), name = "turnover / %", option = "E") +
     theme_void() +
     theme(legend.position = "right")
 
+#turnover by area/voivodeship
+results_station_clean %>%
+  filter(typ_obszaru %in% c("miasto", "wieś")) %>%
+  ggplot(aes(x = wojewodztwo, y = (wydane_karty / wyborcow_uprawnionych * 100), fill = typ_obszaru)) +
+  stat_boxplot(outlier.shape = NA) +
+  labs(y = "turnover / %", x="voivodeship") +
+  scale_fill_discrete(name = "area type", labels = c("urban", "rural")) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 ## tests
 results_station_clean %>%
@@ -63,5 +71,4 @@ results_station_clean %>%
     stat_density2d(data = results_station_clean[results_station_clean$typ_obszaru == "wieś",], color = "red", alpha= 0.5) +
     labs(x = "voters per station", y = "turnover") +
     expand_limits(y = c(0,1)) +
-    #theme_bw() +
     facet_wrap("wojewodztwo")
