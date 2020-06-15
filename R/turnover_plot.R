@@ -15,7 +15,7 @@ map_wojewodztwa <- readRDS("output/clean/map_wojewodztwa.rds")
 #turnover wojewodztwa
 turnover_woj <- results_station_clean %>%
   group_by(wojewodztwo) %>%
-  summarize(turnover = sum(wydane_karty) / sum(wyborcow_uprawnionych) * 100)
+  summarize(turnover = sum(wydane_karty) / sum(wyborcow_uprawnionych) * 100, .groups = 'drop')
 
 map_wojewodztwa %>%
   left_join(turnover_woj, by = c("nazwa" = "wojewodztwo")) %>%
@@ -23,12 +23,12 @@ map_wojewodztwa %>%
     geom_sf(aes(fill = turnover), size = 0.1, color = "white") +
     scale_fill_viridis(limits = c(46,78), breaks = c(50, 55, 60, 65, 70, 75), name = "voter turnover / %", option = "E") +
     theme_void() +
-    theme(legend.justification=c(0, 0), legend.position=c(0.05, 0.05))
+    theme(legend.position = "left")
 
 #turnover powiaty
 turnover_pow <- results_station_clean %>%
   group_by(powiat) %>%
-  summarize(turnover = sum(wydane_karty) / sum(wyborcow_uprawnionych) * 100)
+  summarize(turnover = sum(wydane_karty) / sum(wyborcow_uprawnionych) * 100, .groups = 'drop')
 
 
 map_powiaty %>%
@@ -38,7 +38,7 @@ map_powiaty %>%
     geom_sf(data = map_wojewodztwa, size = 0.1, fill = NA, color = "white") +
     scale_fill_viridis(limits = c(46,78), breaks = c(50, 55, 60, 65, 70, 75), name = "voter turnover / %", option = "E") +
     theme_void() +
-    theme(legend.justification=c(0, 0), legend.position=c(0.05, 0.05))
+    theme(legend.position = "left")
 
 
 ## tests
