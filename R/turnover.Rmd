@@ -93,7 +93,7 @@ results_station_clean %>%
 
 By registered voters per station
 
-```{r, fig.asp = 1}
+```{r, fig.height = 7}
 results_station_clean %>%
   filter(typ_obszaru %in% c("miasto", "wieś")) %>%
   ggplot(aes(x = wyborcow_uprawnionych, y = (wydane_karty / wyborcow_uprawnionych * 100))) +
