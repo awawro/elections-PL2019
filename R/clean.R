@@ -12,6 +12,15 @@ map_powiaty <- st_read("input/maps/powiaty-medium.geojson")
 map_wojwodztwa <- st_read("input/maps/wojewodztwa-medium.geojson")
 map_powiaty$nazwa <- str_sub(map_powiaty$nazwa, 8)
 
+# Read & clean Wikipedia table
+powiaty_table <- GET("https://pl.wikipedia.org/wiki/Lista_powiatów_w_Polsce") %>%
+  readHTMLTable(doc = content(., "text"), skip.rows = 1) %>%
+  pluck(1) %>%
+  select("powiat" = V1, "wojewodztwo" = V4, "powierzchnia" = V5, "liczba_ludnosci" = V6) %>%
+  mutate(powiat = ifelse(str_detect(powiat, pattern = "^powiat"), str_sub(powiat, 8), powiat),
+         powierzchnia = as.numeric(gsub(",", ".", powierzchnia)),
+         liczba_ludnosci = as.numeric(gsub("[[:space:]]", "", liczba_ludnosci)))
+
 ### Clean and subset results dataset
 # prepare for rbind, stations meta only
 results_station_list <- lapply(results_list_raw, '[', 3:32)
@@ -67,3 +76,4 @@ saveRDS(results_slate_clean, "output/clean/results_slate_clean.rds")
 saveRDS(results_candidate_full, "output/clean/results_candidate_full.rds")
 saveRDS(map_powiaty, "output/clean/map_powiaty.rds")
 saveRDS(map_wojwodztwa, "output/clean/map_wojewodztwa.rds")
+saveRDS(powiaty_table, "output/clean/powiaty_table.rds")

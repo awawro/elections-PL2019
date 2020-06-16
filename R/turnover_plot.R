@@ -2,6 +2,8 @@ library(tidyverse)
 library(ggridges)
 library(viridis)
 library(sf)
+library(XML)
+library(httr)
 
 cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
 
@@ -11,6 +13,7 @@ results_slate_clean <- readRDS("output/clean/results_slate_clean.rds")
 results_candidate_full <- readRDS("output/clean/results_candidate_full.rds")
 map_powiaty <- readRDS("output/clean/map_powiaty.rds")
 map_wojewodztwa <- readRDS("output/clean/map_wojewodztwa.rds")
+powiaty_table <- readRDS("output/clean/powiaty_table.rds")
 
 #turnover wojewodztwa
 turnover_woj <- results_station_clean %>%
@@ -43,10 +46,35 @@ map_powiaty %>%
 results_station_clean %>%
   filter(typ_obszaru %in% c("miasto", "wieś")) %>%
   ggplot(aes(x = wojewodztwo, y = (wydane_karty / wyborcow_uprawnionych * 100), fill = typ_obszaru)) +
-  stat_boxplot(outlier.shape = NA) +
-  labs(y = "turnover / %", x="voivodeship") +
-  scale_fill_discrete(name = "area type", labels = c("urban", "rural")) +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+    stat_boxplot(outlier.shape = NA) +
+    labs(y = "turnover / %", x="voivodeship") +
+    scale_fill_discrete(name = "area type", labels = c("urban", "rural")) +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+#turnover by area/station size/voivodeship
+results_station_clean %>%
+  filter(typ_obszaru %in% c("miasto", "wieś")) %>%
+  ggplot(aes(x = wyborcow_uprawnionych, y = (wydane_karty / wyborcow_uprawnionych * 100))) +
+    stat_density2d(data = results_station_clean[results_station_clean$typ_obszaru == "miasto",], color = "blue", alpha = 0.5) +
+    stat_density2d(data = results_station_clean[results_station_clean$typ_obszaru == "wieś",], color = "red", alpha= 0.5) +
+    labs(x = "registered voters per station", y = "turnover / %") +
+    expand_limits(y = c(0,100)) +
+    facet_wrap("wojewodztwo")
+
+#turnover by powiat density
+results_station_clean %>%
+  filter(typ_obszaru %in% c("miasto", "wieś")) %>%
+  group_by(powiat) %>%
+  summarize(turnover = sum(wydane_karty) / sum(wyborcow_uprawnionych) * 100, n_stations = n(), n_voters = sum(wyborcow_uprawnionych), .groups = 'drop') %>%
+  left_join(powiaty_table, by = "powiat") %>%
+  mutate(area_perstation = powierzchnia / n_stations) %>%
+  ggplot(aes(x = area_perstation, y = turnover)) +
+    geom_point() +
+    geom_smooth(formula = (y ~ x), method = 'lm') +
+    labs(x = "area per station / km2", y = "turnover / %") +
+    expand_limits(y = c(40,80))
+    
+
 
 ## tests
 results_station_clean %>%
@@ -64,11 +92,5 @@ results_station_clean %>%
   theme(legend.position = "bottom") +
   scale_color_manual(values = cbPalette[c(3,2)])
 
-results_station_clean %>%
-  filter(typ_obszaru %in% c("miasto", "wieś")) %>%
-  ggplot(aes(x = wyborcow_uprawnionych, y = (wydane_karty / wyborcow_uprawnionych))) +
-    stat_density2d(data = results_station_clean[results_station_clean$typ_obszaru == "miasto",], color = "blue", alpha = 0.5) +
-    stat_density2d(data = results_station_clean[results_station_clean$typ_obszaru == "wieś",], color = "red", alpha= 0.5) +
-    labs(x = "voters per station", y = "turnover") +
-    expand_limits(y = c(0,1)) +
-    facet_wrap("wojewodztwo")
+
+  
