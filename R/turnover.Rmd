@@ -6,17 +6,17 @@ output: md_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE)
 ```
 
-```{r include=FALSE, echo=FALSE}
+```{r include=FALSE}
 library(tidyverse)
 library(ggridges)
 library(viridis)
 library(sf)
 ```
 
-```{r cache=TRUE, include=FALSE, echo=FALSE}
+```{r cache=TRUE, include=FALSE}
 results_station_clean <- readRDS("../output/clean/results_station_clean.rds")
 results_candidate_clean <- readRDS("../output/clean/results_candidate_clean.rds")
 results_slate_clean <- readRDS("../output/clean/results_slate_clean.rds")
@@ -32,7 +32,7 @@ powiaty_table <- readRDS("../output/clean/powiaty_table.rds")
 
 By voivodeship
 
-```{r echo=FALSE}
+```{r}
 turnover_woj <- results_station_clean %>%
   group_by(wojewodztwo) %>%
   summarize(turnover = sum(wydane_karty) / sum(wyborcow_uprawnionych) * 100, .groups = 'drop')
@@ -48,7 +48,7 @@ map_wojewodztwa %>%
 
 By powiat
 
-```{r echo=FALSE}
+```{r}
 turnover_pow <- results_station_clean %>%
   group_by(powiat) %>%
   summarize(turnover = sum(wydane_karty) / sum(wyborcow_uprawnionych) * 100, .groups = 'drop')
@@ -93,7 +93,7 @@ results_station_clean %>%
 
 By registered voters per station
 
-```{r}
+```{r, fig.asp = 1}
 results_station_clean %>%
   filter(typ_obszaru %in% c("miasto", "wieś")) %>%
   ggplot(aes(x = wyborcow_uprawnionych, y = (wydane_karty / wyborcow_uprawnionych * 100))) +
