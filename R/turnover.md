@@ -50,7 +50,7 @@ There is a clear correlation if all powiats are considered (blue line),
 but it seemed that it might be largely driven by the group of ‘100%
 urban voters’ powiats, which belong in fact ‘cities with powiat rights’
 - a special category of powiats. Excluding these points completely
-changes the result (red line) - correlation is no longer observed.
+changes the result (red line): the correlation is no longer observed.
 
 One factor that might affect the willingness to vote is distance to the
 closest polling station. Although I could not find a summary of areas
@@ -59,8 +59,9 @@ be achieved by calculating the average area served by a single polling
 station for each powiat: powiat areas were pulled from the Polish
 Wikipedia page.
 
-![](turnover_files/figure-markdown_strict/unnamed-chunk-7-1.png) This
-correlation is clear: the larger average area served by per polling
+![](turnover_files/figure-markdown_strict/unnamed-chunk-7-1.png)
+
+This correlation is clear: the larger average area served by per polling
 station on a powiat level, the lower the expected turnover.
 
 Another interesting thing to look at is whether the size of a polling
