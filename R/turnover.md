@@ -49,7 +49,7 @@ of voters in urban areas on the powiat level.
 There is a clear correlation if all powiats are considered (blue line),
 but it seemed that it might be largely driven by the group of ‘100%
 urban voters’ powiats, which belong in fact ‘cities with powiat rights’
-- a special category of powiats. Excluding these points completely
+– a special category of powiats. Excluding these points completely
 changes the result (red line): the correlation is no longer observed.
 
 One factor that might affect the willingness to vote is distance to the
