@@ -69,12 +69,14 @@ station correlates with the voter turnover. We can suspect that the
 polling stations serving more densely populated areas might be larger,
 so let’s separate urban and rural areas, as well as voivodeships.
 
+    ## `geom_smooth()` using formula 'y ~ x'
+    ## `geom_smooth()` using formula 'y ~ x'
+
 ![](turnover_files/figure-markdown_strict/unnamed-chunk-8-1.png)
 
 Well, our suspicion was correct; urban areas (blue) are indeed on
-average served by larger polling stations. However, the turnover
-difference between the urban and rural areas explains most of
-variability in the plot above. The size of a polling station in rural
-areas does not seem to have a significant effect on the expected
-turnover, with a possible exception of Mazovia and Pomerania \[pol.
-*pomorskie*\] voivodeships.
+average served by larger polling stations. The size of a polling station
+is generally positively correlated the expected turnover, with the
+notable exception of Opole \[pol. *opolskie*\] voivodeship. It can be
+also seen that the correlation is consistently stronger in urban areas
+across all regions.

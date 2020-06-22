@@ -99,8 +99,10 @@ results_station_clean %>%
 results_station_clean %>%
   filter(typ_obszaru %in% c("miasto", "wieś")) %>%
   ggplot(aes(x = wyborcow_uprawnionych, y = (wydane_karty / wyborcow_uprawnionych * 100))) +
-  stat_density2d(data = results_station_clean[results_station_clean$typ_obszaru == "miasto",], color = "blue", alpha = 0.5) +
+  stat_density2d(data = filter(results_station_clean, typ_obszaru == "miasto"), color = "blue", alpha = 0.5) +
   stat_density2d(data = results_station_clean[results_station_clean$typ_obszaru == "wieś",], color = "red", alpha= 0.5) +
+  geom_smooth(data = filter(results_station_clean, typ_obszaru == "miasto"), method = "lm", se = FALSE, color = "blue", size = 0.5) +
+  geom_smooth(data = filter(results_station_clean, typ_obszaru == "wieś"), method = "lm", se = FALSE, color = "red", size = 0.5) +
   labs(x = "registered voters per station", y = "turnover / %") +
   expand_limits(y = c(0,100)) +
   facet_wrap("wojewodztwo")
@@ -122,4 +124,20 @@ results_station_clean %>%
   scale_color_manual(values = cbPalette[c(3,2)])
 
 
-  
+results_station_clean %>%
+  filter(typ_obszaru %in% c("miasto")) %>%
+  group_by(typ_obszaru, wojewodztwo) %>%
+  summarize(r = cor(wyborcow_uprawnionych, (wydane_karty / wyborcow_uprawnionych)), .groups = "drop") %>%
+  arrange(desc(r))
+
+#turnover by area/station size/voivodeship
+results_station_clean %>%
+  filter(typ_obszaru %in% c("miasto", "wieś")) %>%
+  ggplot(aes(x = wyborcow_uprawnionych, y = (wydane_karty / wyborcow_uprawnionych * 100))) +
+  stat_density2d(data = filter(results_station_clean, typ_obszaru == "miasto"), color = "blue", alpha = 0.5) +
+  stat_density2d(data = results_station_clean[results_station_clean$typ_obszaru == "wieś",], color = "red", alpha= 0.5) +
+  geom_smooth(data = filter(results_station_clean, typ_obszaru == "miasto"), method = "lm", se = FALSE, color = "blue", size = 0.5) +
+  geom_smooth(data = filter(results_station_clean, typ_obszaru == "wieś"), method = "lm", se = FALSE, color = "red", size = 0.5) +
+  labs(x = "registered voters per station", y = "turnover / %") +
+  expand_limits(y = c(0,100)) +
+  facet_wrap("wojewodztwo")

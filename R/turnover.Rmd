@@ -128,11 +128,13 @@ Another interesting thing to look at is whether the size of a polling station co
 results_station_clean %>%
   filter(typ_obszaru %in% c("miasto", "wieś")) %>%
   ggplot(aes(x = wyborcow_uprawnionych, y = (wydane_karty / wyborcow_uprawnionych * 100))) +
-    stat_density2d(data = results_station_clean[results_station_clean$typ_obszaru == "miasto",], color = "blue", alpha = 0.5) +
-    stat_density2d(data = results_station_clean[results_station_clean$typ_obszaru == "wieś",], color = "red", alpha= 0.5) +
-    labs(x = "registered voters per station", y = "turnover / %") +
-    expand_limits(y = c(0,100)) +
-    facet_wrap("wojewodztwo")
+  stat_density2d(data = filter(results_station_clean, typ_obszaru == "miasto"), color = "blue", alpha = 0.5) +
+  stat_density2d(data = results_station_clean[results_station_clean$typ_obszaru == "wieś",], color = "red", alpha= 0.5) +
+  geom_smooth(data = filter(results_station_clean, typ_obszaru == "miasto"), method = "lm", se = FALSE, color = "blue", size = 0.5) +
+  geom_smooth(data = filter(results_station_clean, typ_obszaru == "wieś"), method = "lm", se = FALSE, color = "red", size = 0.5) +
+  labs(x = "registered voters per station", y = "turnover / %") +
+  expand_limits(y = c(0,100)) +
+  facet_wrap("wojewodztwo")
 ```
 
-Well, our suspicion was correct; urban areas (blue) are indeed on average served by larger polling stations. However, the turnover difference between the urban and rural areas explains most of variability in the plot above. The size of a polling station in rural areas does not seem to have a significant effect on the expected turnover, with a possible exception of Mazovia and Pomerania [pol. *pomorskie*] voivodeships.
+Well, our suspicion was correct; urban areas (blue) are indeed on average served by larger polling stations. The size of a polling station is generally positively correlated the expected turnover, with the notable exception of Opole [pol. *opolskie*] voivodeship. It can be also seen that the correlation is consistently stronger in urban areas across all regions.
