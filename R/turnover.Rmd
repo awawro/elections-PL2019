@@ -130,8 +130,8 @@ results_station_clean %>%
   ggplot(aes(x = wyborcow_uprawnionych, y = (wydane_karty / wyborcow_uprawnionych * 100))) +
   stat_density2d(data = filter(results_station_clean, typ_obszaru == "miasto"), color = "blue", alpha = 0.5) +
   stat_density2d(data = results_station_clean[results_station_clean$typ_obszaru == "wieś",], color = "red", alpha= 0.5) +
-  geom_smooth(data = filter(results_station_clean, typ_obszaru == "miasto"), method = "lm", se = FALSE, color = "blue", size = 0.5) +
-  geom_smooth(data = filter(results_station_clean, typ_obszaru == "wieś"), method = "lm", se = FALSE, color = "red", size = 0.5) +
+  geom_smooth(data = filter(results_station_clean, typ_obszaru == "miasto"), method = "lm", formula = (y ~ x), se = FALSE, color = "blue", size = 0.5) +
+  geom_smooth(data = filter(results_station_clean, typ_obszaru == "wieś"), method = "lm", formula = (y ~ x), se = FALSE, color = "red", size = 0.5) +
   labs(x = "registered voters per station", y = "turnover / %") +
   expand_limits(y = c(0,100)) +
   facet_wrap("wojewodztwo")

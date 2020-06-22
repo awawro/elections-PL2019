@@ -69,9 +69,6 @@ station correlates with the voter turnover. We can suspect that the
 polling stations serving more densely populated areas might be larger,
 so let’s separate urban and rural areas, as well as voivodeships.
 
-    ## `geom_smooth()` using formula 'y ~ x'
-    ## `geom_smooth()` using formula 'y ~ x'
-
 ![](turnover_files/figure-markdown_strict/unnamed-chunk-8-1.png)
 
 Well, our suspicion was correct; urban areas (blue) are indeed on
