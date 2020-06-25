@@ -15,26 +15,33 @@ map_powiaty <- readRDS("output/clean/map_powiaty.rds")
 map_wojewodztwa <- readRDS("output/clean/map_wojewodztwa.rds")
 powiaty_table <- readRDS("output/clean/powiaty_table.rds")
 
-# ballots received
+area_names <- c(miasto = "urban", wieś = "rural", zagranica = "overseas")
+station_names <- c('areszt śledczy' = "jail", 'dom pomocy społecznej' = "nursing facility", stały = 'permanent', 'dom studencki' = "dormitory", 'zakład karny' = "prison", 'zakład leczniczy' = "healthcare center")
+
+# ballots received by area
 results_station_clean %>%
   filter(typ_obszaru %in% c("miasto", "wieś", "zagranica")) %>%
   ggplot(aes(x = wyborcow_uprawnionych, y = otrzymanych_kart)) +
-  geom_point(alpha = 0.1) +
+  geom_point(alpha = 0.5, size = 0.2) +
   geom_abline(linetype = 3) +
-  facet_wrap("typ_obszaru")
+  labs(x = "registered voters per station", y = "ballots delivered") +
+  facet_wrap("typ_obszaru", labeller = labeller(typ_obszaru = area_names))
 
+# ballots received by type
 results_station_clean %>%
-  filter(typ_obszaru %in% c("miasto", "wieś", "zagranica")) %>%
-  ggplot(aes(x = typ_obszaru, y = (otrzymanych_kart / wyborcow_uprawnionych * 100))) +
-    geom_point() +
-    labs(y = "y", x="voivodeship") +
-    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  filter(typ_obwodu %in% c("areszt śledczy", "dom pomocy społecznej", "stały", "dom studencki", "zakład karny", "zakład leczniczy")) %>%
+  ggplot(aes(x = wyborcow_uprawnionych, y = otrzymanych_kart)) +
+  geom_point(alpha = 0.5, size = 0.2) +
+  geom_abline(linetype = 3) +
+  labs(x = "registered voters per station", y = "ballots delivered") +
+  facet_wrap("typ_obwodu", nrow = 2, labeller = labeller(typ_obwodu = station_names))
 
+# voting right proof
 results_station_clean %>%
-  filter(typ_obszaru %in% c("miasto", "wieś", "zagranica")) %>%
-  #group_by(typ_obszaru, wojewodztwo) %>%
-  mutate(perc_received = otrzymanych_kart / wyborcow_uprawnionych * 100) %>%
-  arrange(desc(perc_received))
+  filter(typ_obwodu %in% c("areszt śledczy", "dom pomocy społecznej", "stały", "dom studencki", "zakład karny", "zakład leczniczy")) %>%
+  ggplot(aes(x = typ_obwodu, y = (z_zaswiadczeniem / wydane_karty))) +
+  geom_point(alpha = 0.25, size = 0.2, position = "jitter") +
+  labs(x = "registered voters per station", y = "ballots delivered")
 
 #test
 turnover_woj <- results_station_clean %>%
