@@ -23,7 +23,7 @@ results_station_clean %>%
   filter(typ_obszaru %in% c("miasto", "wieś", "zagranica")) %>%
   ggplot(aes(x = wyborcow_uprawnionych, y = otrzymanych_kart)) +
   geom_point(alpha = 0.5, size = 0.2) +
-  geom_abline(linetype = 3) +
+  geom_abline(linetype = 3, color = "red") +
   labs(x = "registered voters per station", y = "ballots delivered") +
   facet_wrap("typ_obszaru", labeller = labeller(typ_obszaru = area_names))
 
@@ -38,10 +38,14 @@ results_station_clean %>%
 
 # voting right proof
 results_station_clean %>%
-  filter(typ_obwodu %in% c("areszt śledczy", "dom pomocy społecznej", "stały", "dom studencki", "zakład karny", "zakład leczniczy")) %>%
-  ggplot(aes(x = typ_obwodu, y = (z_zaswiadczeniem / wydane_karty))) +
-  geom_point(alpha = 0.25, size = 0.2, position = "jitter") +
-  labs(x = "registered voters per station", y = "ballots delivered")
+  filter(typ_obszaru %in% c("miasto", "wieś")) %>%
+  ggplot(aes(x = wojewodztwo, y = (z_zaswiadczeniem / wydane_karty * 100), fill = typ_obszaru)) +
+  stat_summary(geom = "bar", fun = mean, position = "dodge") +
+  stat_summary(geom = "hline", fun = mean, aes(x = 1, yintercept = ..y.., color = typ_obszaru), linetype = 4, size = 1) +
+  labs(x = "voivodeship", y = "% voters with a proof of voter registration") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_fill_manual(values = cbPalette[c(3,2)]) +
+  scale_color_manual(values = cbPalette[c(3,2)])
 
 #test
 turnover_woj <- results_station_clean %>%

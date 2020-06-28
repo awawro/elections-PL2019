@@ -1,0 +1,67 @@
+---
+title: "votemeta"
+author: "Adam Wawro"
+date: "6/27/2020"
+output: md_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+```{r include=FALSE}
+library(tidyverse)
+library(viridis)
+library(sf)
+```
+
+```{r cache=TRUE, include=FALSE}
+results_station_clean <- readRDS("../output/clean/results_station_clean.rds")
+results_candidate_clean <- readRDS("../output/clean/results_candidate_clean.rds")
+results_slate_clean <- readRDS("../output/clean/results_slate_clean.rds")
+results_candidate_full <- readRDS("../output/clean/results_candidate_full.rds")
+map_powiaty <- readRDS("../output/clean/map_powiaty.rds")
+map_wojewodztwa <- readRDS("../output/clean/map_wojewodztwa.rds")
+powiaty_table <- readRDS("../output/clean/powiaty_table.rds")
+
+area_names <- c(miasto = "urban", wieś = "rural", zagranica = "overseas")
+station_names <- c('areszt śledczy' = "jail", 'dom pomocy społecznej' = "nursing facility", stały = 'permanent', 'dom studencki' = "dormitory", 'zakład karny' = "prison", 'zakład leczniczy' = "healthcare center")
+```
+
+## The Sejm elections in Poland in 2019
+
+### Voting metadata
+
+Ballots received by polling stations by area type
+
+```{r}
+results_station_clean %>%
+  filter(typ_obszaru %in% c("miasto", "wieś", "zagranica")) %>%
+  ggplot(aes(x = wyborcow_uprawnionych, y = otrzymanych_kart)) +
+  geom_point(alpha = 0.5, size = 0.2) +
+  geom_abline(linetype = 3, color = "red") +
+  labs(x = "registered voters per station", y = "ballots delivered") +
+  facet_wrap("typ_obszaru", labeller = labeller(typ_obszaru = area_names))
+```
+
+Ddd
+Ddd podzielne przez 10
+
+```{r}
+ 
+```
+
+Ddd
+
+```{r}
+results_station_clean %>%
+  filter(typ_obwodu %in% c("areszt śledczy", "dom pomocy społecznej", "stały", "dom studencki", "zakład karny", "zakład leczniczy")) %>%
+  ggplot(aes(x = wyborcow_uprawnionych, y = otrzymanych_kart)) +
+  geom_point(alpha = 0.5, size = 0.2) +
+  geom_abline(linetype = 3) +
+  labs(x = "registered voters per station", y = "ballots delivered") +
+  facet_wrap("typ_obwodu", nrow = 2, labeller = labeller(typ_obwodu = station_names))
+```
+
+
+
